@@ -1,0 +1,19 @@
+{
+  "name": "class",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "broker": "nodemon mqttBroker.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aedes": "^0.51.3",
+    "os": "^0.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
