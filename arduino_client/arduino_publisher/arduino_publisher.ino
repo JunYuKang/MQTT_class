@@ -7,8 +7,8 @@
 #define brokerPort 1883
 #define clientID   "Arduino_MQTT_Publisher"
 
-#define ledPin        9
-#define buttonPin     10
+#define ledPin     9
+#define buttonPin  10
 
 WiFiClient wifi;
 MqttClient mqttClient(wifi);
