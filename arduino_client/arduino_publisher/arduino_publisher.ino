@@ -1,14 +1,15 @@
 #include <WiFiNINA.h>
 #include <ArduinoMqttClient.h>
 
-#define ssid       "dlink-9DE4"
-#define password   "fibjf66129"
-#define brokerHost "172.31.2.251"
+#define ssid       "classroom-B"
+#define password   "Nptu123456789"
+
+#define brokerHost "your_broker_host"
 #define brokerPort 1883
 #define clientID   "Arduino_MQTT_Publisher"
 
-#define ledPin     9
-#define buttonPin  10
+#define ledPin     10
+#define buttonPin  8
 
 WiFiClient wifi;
 MqttClient mqttClient(wifi);
@@ -63,7 +64,7 @@ void led() {
   mqttClient.beginMessage("led");
   mqttClient.print("HIGH");
   mqttClient.endMessage();
-  delay(1000);
+  delay(10000);
   digitalWrite(ledPin, LOW);
   mqttClient.beginMessage("led");
   mqttClient.print("LOW");
