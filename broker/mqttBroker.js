@@ -22,7 +22,6 @@ class mqttBroker {
                 address:ip6To4(client.conn.remoteAddress),
                 role:'client',
                 topics:[],
-                message:null,
                 QoS:null
             });
             console.table(this.connected);
@@ -45,9 +44,6 @@ class mqttBroker {
                 };
                 if (!this.connected[index].topics.includes(packet.topic)) {
                     this.connected[index].topics.push(packet.topic);
-                };
-                if (this.connected[index].message == null || this.connected[index].message !== packet.payload.toString()) {
-                    this.connected[index].message = packet.payload.toString();
                 };
                 if (this.connected[index].QoS == null || this.connected[index].QoS !== packet.qos) {
                     this.connected[index].QoS = packet.qos;
