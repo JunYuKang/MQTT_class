@@ -64,10 +64,10 @@ void led() {
   mqttClient.beginMessage("led");
   mqttClient.print("HIGH");
   mqttClient.endMessage();
-  delay(10000);
+  delay(5000);
   digitalWrite(ledPin, LOW);
   mqttClient.beginMessage("led");
   mqttClient.print("LOW");
   mqttClient.endMessage();
-  delay(1000);
+  delay(5000);
 }
