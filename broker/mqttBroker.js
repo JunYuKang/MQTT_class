@@ -24,11 +24,13 @@ class mqttBroker {
                 topics:[],
                 QoS:null
             });
+            console.log('Broker started and listening on ->', getAddress() + ':' + this.port);
             console.table(this.connected);
         });
         this.aedes.on('clientDisconnect', (client) => {
             console.log(client.id, 'got disconnected !');
             this.connected = this.connected.filter((conn) => conn.ID !== client.id);
+            console.log('Broker started and listening on ->', getAddress() + ':' + this.port);
             console.table(this.connected);
         });
     };
@@ -49,6 +51,7 @@ class mqttBroker {
                     this.connected[index].QoS = packet.qos;
                 };
             };
+            console.log('Broker started and listening on ->', getAddress() + ':' + this.port);
             console.table(this.connected);
         });
     };
@@ -60,12 +63,14 @@ class mqttBroker {
             const index = this.connected.findIndex((conn) => conn.ID === client.id);
             if (index !== -1) {
                 this.connected[index].role = 'subscriber';
-                if (!this.connected[index].topics.includes(subscriptions[0].topic)) {
-                    this.connected[index].topics.push(subscriptions[0].topic);
-                };
-                this.connected[index].message = null;
-                this.connected[index].QoS = subscriptions[0].qos;
+                subscriptions.forEach((subscriptions) => {
+                    if (!this.connected[index].topics.includes(subscriptions.topic)) {
+                        this.connected[index].topics.push(subscriptions.topic);
+                    };
+                    this.connected[index].QoS = subscriptions.qos;
+                });
             };
+            console.log('Broker started and listening on ->', getAddress() + ':' + this.port);
             console.table(this.connected);
         });
         this.aedes.on('unsubscribe', (subscriptions, client) => {
@@ -79,6 +84,7 @@ class mqttBroker {
                     this.connected[index].role = 'client';
                 };
             };
+            console.log('Broker started and listening on ->', getAddress() + ':' + this.port);
             console.table(this.connected);
         });
     };
