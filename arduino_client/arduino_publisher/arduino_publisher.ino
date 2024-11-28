@@ -1,15 +1,23 @@
 #include <WiFiNINA.h>
 #include <ArduinoMqttClient.h>
 
-#define ssid       "classroom-B"
-#define password   "Nptu123456789"
+#define ssid       ""
+#define password   ""
 
-#define brokerHost "your_broker_host"
-#define brokerPort 1883
-#define clientID   "Arduino_MQTT_Publisher"
+#define brokerHost ""
+#define brokerPort 
+#define clientID   ""
 
 #define ledPin     10
 #define buttonPin  8
+#define potPin     A0
+
+int potValue        = 0;
+int buttonState     = 0;
+int lastButtonState = HIGH;
+unsigned long previousMillis = 0;
+bool ledState = false;
+
 
 WiFiClient wifi;
 MqttClient mqttClient(wifi);
@@ -33,6 +41,7 @@ void loop() {
   if(!mqttClient.connected()) {
     connectToBroker();
   }
+  sensor();
   led();
 }
 
@@ -59,15 +68,29 @@ void connectToBroker() {
   Serial.println("Connect to broker scuuessfully !");
 }
 
+void sensor() {
+  potValue = analogRead(potPin);
+  potValue = map(potValue,0,1023,0,5000);
+  buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW && lastButtonState == HIGH){
+    mqttClient.beginMessage("potValue");
+    mqttClient.print(potValue);
+    mqttClient.endMessage();
+    lastButtonState == buttonState;
+  }
+}
+
 void led() {
-  digitalWrite(ledPin, HIGH);
-  mqttClient.beginMessage("led");
-  mqttClient.print("HIGH");
-  mqttClient.endMessage();
-  delay(5000);
-  digitalWrite(ledPin, LOW);
-  mqttClient.beginMessage("led");
-  mqttClient.print("LOW");
-  mqttClient.endMessage();
-  delay(5000);
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= potValue) {
+    previousMillis = currentMillis;
+
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState ? HIGH : LOW);
+
+    mqttClient.beginMessage("led");
+    mqttClient.print(ledState ? "HIGH" : "LOW");
+    mqttClient.endMessage();
+  }
 }
